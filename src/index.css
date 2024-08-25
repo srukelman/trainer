@@ -66,3 +66,25 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+table, th {
+  border: 1px solid white;
+  border-collapse: collapse;
+}
+
+.CalendarTable--header{
+  border-bottom: 2px solid white;
+}
+
+.CalendarTable--header-today{
+  background: rgba(200,200,200,.5);
+}
+
+.CalendarTable--data-today{
+  background: rgba(200,200,200,.5);
+}
+
+.CalendarTable--data{
+  border-right: 1px solid white;
+  border-collapse: collapse;
+}
