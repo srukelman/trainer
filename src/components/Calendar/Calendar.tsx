@@ -15,7 +15,7 @@ export const Calendar: CalendarComponent = ({
             <table>
                 <thead>
                     <tr>
-                        {weekdays.map((_, index) => {
+                        {weekdays.map((value, index) => {
                             return (
                                 <th
                                 key={(state.currentDay.getMonth(), index - state.currentDay.getDay() + state.currentDay.getDate())}
@@ -23,7 +23,7 @@ export const Calendar: CalendarComponent = ({
                                     "CalendarTable--header-today": index == state.currentDay.getDay()
                                 })}
                                 >
-                                    {months[state.currentDay.getMonth()]} {index - state.currentDay.getDay() + state.currentDay.getDate()}
+                                    {value} {months[state.currentDay.getMonth()]} {index - state.currentDay.getDay() + state.currentDay.getDate()}
                                 </th>
                             );
                         })}

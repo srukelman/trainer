@@ -10,7 +10,9 @@ function App() {
   return (
     <div>
       <Routes>
-        
+        <Route path="/Calendar" element={<Calendar currentDay={null} />}/>
+        <Route path="/ExchangeToken" element={<StravaRedirect />} />
+        <Route path="/StravaInfo/:accessToken" element={<StravaInfo />} />
         <Route path="/"
           element={
             <>
@@ -19,9 +21,6 @@ function App() {
             </>
           }
         />
-        <Route path="/Calendar" element={<Calendar currentDay={null} />}/>
-        <Route path="/ExchangeToken" element={<StravaRedirect />} />
-        <Route path="/StravaInfo/:accessToken" element={<StravaInfo />} />
       </Routes>
     </div>
   )
