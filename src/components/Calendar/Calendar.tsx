@@ -7,7 +7,7 @@ export const Calendar: CalendarComponent = ({
 }) => {
     const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-    const [state, setState] = useState({currentDay: currentDay || new Date()});
+    const [state, _] = useState({currentDay: currentDay || new Date()});
     
     return (
         <div>
