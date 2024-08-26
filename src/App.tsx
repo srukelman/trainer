@@ -8,8 +8,9 @@ import { StravaInfo } from './components/Strava/StravaInfo'
 function App() {
 
   return (
-    <>
+    <div>
       <Routes>
+        
         <Route path="/"
           element={
             <>
@@ -18,11 +19,11 @@ function App() {
             </>
           }
         />
-        <Route path="/exchange_token" element={<StravaRedirect />} />
-        <Route path="/stravainfo/:accessToken" element={<StravaInfo />} />
+        <Route path="/Calendar" element={<Calendar currentDay={null} />}/>
+        <Route path="/ExchangeToken" element={<StravaRedirect />} />
+        <Route path="/StravaInfo/:accessToken" element={<StravaInfo />} />
       </Routes>
-      
-    </>
+    </div>
   )
 }
 
