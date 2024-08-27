@@ -21,6 +21,7 @@ function App() {
             </>
           }
         />
+        <Route path='*' element={<Calendar currentDay={null} />}/>
       </Routes>
     </div>
   )

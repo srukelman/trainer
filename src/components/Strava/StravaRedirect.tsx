@@ -15,10 +15,9 @@ export const StravaRedirect: StravaAuthenticationComponent = ({}) => {
                 try{
                     const response = await fetch(uri, { method: 'POST', cache: 'force-cache' });
                     const json = await response.json();
-                    const token = `${json['token_type']}+${json['access_token']}`;
-                    setAccessToken(`${json['token_type']}+${json['access_token']}`);
-                    console.log(JSON.stringify(json));
-                    if (json['token_type']){
+                    const token = `${json['access_token']}`;
+                    setAccessToken(`${json['access_token']}`);
+                    if (token){
                         navigate(`/StravaInfo/${token}`);
                     }
                 } catch (err) {
