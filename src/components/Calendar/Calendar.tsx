@@ -1,5 +1,5 @@
-import { CalendarComponent } from "./types"
-import { useState } from "react";
+import { CalendarComponent, Activity } from "./types"
+import { useEffect, useState } from "react";
 import classNames from "classnames";
 
 export const Calendar: CalendarComponent = ({
@@ -8,7 +8,31 @@ export const Calendar: CalendarComponent = ({
     const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     const [state, _] = useState({currentDay: currentDay || new Date()});
-    
+    const atheleteId = "48566990";
+    const [activities, setActivities] = useState<Activity[]>([])
+    useEffect(() => {
+        const getData = async () => {
+            const uri = `${import.meta.env.VITE_BACKEND_URL}/activities/athlete/${atheleteId}`;
+            const requestHeaders: Headers = new Headers({
+                "Content-Type": 'application/x-www-form-urlencoded'
+            });
+            const response = await fetch(uri, { method: 'GET', headers: requestHeaders });
+            const json = await response.json();
+            setActivities(json);
+            console.log(JSON.stringify(json));
+        }
+        getData();
+    }, []);
+    const formatActivity = (activity: Activity) => {
+        if (!activity) return <p>No Activity</p>
+        return (
+            <div>
+                <p>{activity.title}</p>
+                <p>{activity.distance} meters</p>
+                <p>{activity.time} seconds</p>
+            </div>
+        )
+    }
     return (
         <div>
 
@@ -46,14 +70,16 @@ export const Calendar: CalendarComponent = ({
                     </tr>
                     <tr>
                         {weekdays.map((_, index) => {
+                            const day = new Date(Number(state.currentDay) - (state.currentDay.getDay() - index) * 24 * 60 * 60 * 1000);
                             return (
                                 <td
-                                key={(state.currentDay.getMonth(), index - state.currentDay.getDay() + state.currentDay.getDate())}
+                                key={(day.getMonth(), day.getDay() + day.getDate())}
                                 className={classNames("CalendarTable--data", {
                                     "CalendarTable--data-today": index == state.currentDay.getDay()
                                 })}
                                 >
                                     Workout Completed:
+                                    {formatActivity(activities.filter(function(item) { return item.date.split('T')[0] == day.toISOString().split('T')[0] })[0])}
                                 </td>
                             );
                         })}
