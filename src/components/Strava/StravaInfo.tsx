@@ -27,12 +27,12 @@ export const StravaInfo: StravaInfoComponent = ({}) => {
                 "Content-Type": 'application/x-www-form-urlencoded'
             });
             const requestBody = {
-                "id": athlete[0].id.toString(),
-                "title": athlete[0].name,
-                "athlete": athlete[0].athlete.id.toString(),
-                "distance": athlete[0].distance,
-                "time": athlete[0].moving_time,
-                "date": athlete[0].start_date_local,
+                "id": athlete[1].id.toString(),
+                "title": athlete[1].name,
+                "athlete": athlete[1].athlete.id.toString(),
+                "distance": athlete[1].distance,
+                "time": athlete[1].moving_time,
+                "date": athlete[1].start_date_local,
             }
             console.log(JSON.stringify(requestBody));
             const response = await fetch(uri, { method: 'POST', headers: requestHeaders, body: JSON.stringify(requestBody) });
