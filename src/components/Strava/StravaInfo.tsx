@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 export const StravaInfo: StravaInfoComponent = ({}) => {
     let { accessToken } = useParams();
-    const [athlete, setAthlete] = useState<String>();
+    const [athlete, setAthlete] = useState<any>();
     const requestHeaders: Headers = new Headers({
         "Host": 'trainer.seanrkelman.com',
         "Authorization": `Bearer ${accessToken}`,
@@ -12,14 +12,39 @@ export const StravaInfo: StravaInfoComponent = ({}) => {
     });
     useEffect(() => {
         const getData = async () => {
-            const payload = await fetch("https://www.strava.com/api/v3/athlete/activities?per_page=100", { method: 'GET', headers: requestHeaders });
-            const json = await payload.json();
-            setAthlete(JSON.stringify(json));
+            if (accessToken && !athlete){
+                const payload = await fetch("https://www.strava.com/api/v3/athlete/activities?per_page=100", { method: 'GET', headers: requestHeaders });
+                const json = await payload.json();
+                setAthlete(json);
+            }
         }
         getData();
-    })
+    });
+    const handleClick = async () => {
+        if (athlete){
+            const uri = `${import.meta.env.VITE_BACKEND_URL}/activities`;
+            const requestHeaders: Headers = new Headers({
+                "Content-Type": 'application/x-www-form-urlencoded'
+            });
+            const requestBody = {
+                "id": athlete[0].id.toString(),
+                "title": athlete[0].name,
+                "athlete": athlete[0].athlete.id.toString(),
+                "distance": athlete[0].distance,
+                "time": athlete[0].moving_time,
+                "date": athlete[0].start_date_local,
+            }
+            console.log(JSON.stringify(requestBody));
+            const response = await fetch(uri, { method: 'POST', headers: requestHeaders, body: JSON.stringify(requestBody) });
+            const json = await response.json();
+            console.log(json);
+        }
+    }
     
     return (
-        <div>{athlete || 'error'}</div>
+        <div>
+            {JSON.stringify(athlete && athlete[0]) || 'error'}
+            <button onClick={handleClick}>Upload Data To Backend</button>
+        </div>
     );
 };
