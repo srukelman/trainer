@@ -1,6 +1,7 @@
 import { CalendarComponent, Activity } from "./types"
 import { useEffect, useState } from "react";
 import classNames from "classnames";
+import { useUnitStore } from "../../stores/SettingsStore";
 
 export const Calendar: CalendarComponent = ({
     currentDay,
@@ -9,6 +10,7 @@ export const Calendar: CalendarComponent = ({
     const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     const [state, _] = useState({currentDay: currentDay || new Date()});
     const atheleteId = "48566990";
+    const unitStore = useUnitStore();
     const [activities, setActivities] = useState<Activity[]>([])
     useEffect(() => {
         const getData = async () => {
@@ -22,13 +24,24 @@ export const Calendar: CalendarComponent = ({
             console.log(JSON.stringify(json));
         }
         getData();
-    }, []);
+    }, [unitStore]);
     const formatActivity = (activity: Activity) => {
         if (!activity) return <p>No Activity</p>
+        let distance: number;
+        let distanceUnit;
+        if (useUnitStore.getState().setting == 'imperial') {
+            distance = activity.distance * 0.000621371;
+            distanceUnit = 'miles';
+        }
+        else {
+            distance = activity.distance * 0.001;
+            distanceUnit = 'kilometers';
+        }
+        distance = Math.round(distance * 100) / 100
         return (
             <div>
                 <p>{activity.title}</p>
-                <p>{activity.distance} meters</p>
+                <p>{distance} {distanceUnit}</p>
                 <p>{activity.time} seconds</p>
             </div>
         )
