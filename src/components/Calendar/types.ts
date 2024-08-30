@@ -1,7 +1,10 @@
 import { FunctionComponent } from "react"
 
 export type CalendarProps = { currentDay: Date | null }
-export type CalendarState = { currentDay: Date }
+export type CalendarState = {
+    currentDay: Date,
+    weekOf: Date,
+}
 
 export type Activity = {
     id: string,
