@@ -33,7 +33,9 @@ export const StravaInfo: StravaInfoComponent = ({}) => {
                     const date = new Date(json.date);
                     return date.getTime()/1000;
                 } else {
-                    return 0;
+                    const date = new Date();
+                    date.setMonth(date.getMonth() - 2);
+                    return date.getTime()/1000;
                 }
             }
             return 0;
