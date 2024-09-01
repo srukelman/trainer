@@ -1,9 +1,10 @@
-import { CalendarComponent, Activity, CalendarState } from "./types"
+import { CalendarComponent, Activity, CalendarState, Workout } from "./types"
 import { useEffect, useState } from "react";
 import classNames from "classnames";
 import { useUnitStore } from "../../stores/SettingsStore";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDoubleLeft, faAngleDoubleRight } from "@fortawesome/free-solid-svg-icons";
+import { get } from "http";
 
 export const Calendar: CalendarComponent = ({
     currentDay,
@@ -14,9 +15,10 @@ export const Calendar: CalendarComponent = ({
     const atheleteId = "48566990";
     const unitStore = useUnitStore();
     const [activities, setActivities] = useState<Activity[]>([])
+    const [workouts, setWorkouts] = useState<Workout[]>([])
     useEffect(() => {
         state.weekOf.setDate(state.weekOf.getDate() - state.weekOf.getDay());
-        const getData = async () => {
+        const getActivityData = async () => {
             const uri = `${import.meta.env.VITE_BACKEND_URL}/activities/athlete/${atheleteId}`;
             const requestHeaders: Headers = new Headers({
                 "Content-Type": 'application/x-www-form-urlencoded'
@@ -25,8 +27,30 @@ export const Calendar: CalendarComponent = ({
             const json = await response.json();
             setActivities(json);
         }
-        getData();
+        const getWorkoutData = async () => {
+            const uri = `${import.meta.env.VITE_BACKEND_URL}/workouts/athlete/${atheleteId}`;
+            const requestHeaders: Headers = new Headers({
+                "Content-Type": 'application/x-www-form-urlencoded'
+            });
+            const response = await fetch(uri, { method: 'GET', headers: requestHeaders });
+            const json = await response.json();
+            setWorkouts(json);
+        }
+        getActivityData();
+        getWorkoutData();
     }, [unitStore, state]);
+
+    const formatTime = (time: number) => {
+        const seconds = time % 60;
+        const minutes = Math.floor(time / 60);
+        if (minutes < 60) {
+            return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+        const hours = Math.floor(minutes / 60);
+        const newMinutes = minutes % 60;
+        return `${hours}:${newMinutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
+
     const formatActivity = (activity: Activity) => {
         if (!activity) return <p>No Activity</p>
         let distance: number;
@@ -44,10 +68,33 @@ export const Calendar: CalendarComponent = ({
             <div>
                 <p>{activity.title}</p>
                 <p>{distance} {distanceUnit}</p>
-                <p>{activity.time} seconds</p>
+                <p>{formatTime(activity.time)} seconds</p>
             </div>
         )
     }
+
+    const formatWorkout = (workout: Workout) => {
+        if (!workout) return <p>No Workout Planned</p>
+        let distance: number;
+        let distanceUnit;
+        if (useUnitStore.getState().setting == 'imperial') {
+            distance = workout.distance * 0.000621371;
+            distanceUnit = 'miles';
+        }
+        else {
+            distance = workout.distance * 0.001;
+            distanceUnit = 'kilometers';
+        }
+        distance = Math.round(distance * 100) / 100
+        return (
+            <div>
+                <p>{workout.title}</p>
+                <p>{distance} {distanceUnit}</p>
+                <p>{formatTime(workout.time)} seconds</p>
+            </div>
+        )
+    }
+
     const incrementWeek = () => {
         const newDate = new Date(state.weekOf);
         newDate.setDate(newDate.getDate() + 7);
@@ -103,6 +150,7 @@ export const Calendar: CalendarComponent = ({
                                 })}
                                 >
                                     Workout Planned:
+                                    {formatWorkout(workouts.filter(function(item) { return item.date.split('T')[0] == day.toISOString().split('T')[0] })[0])}
                                 </td>
                             );
                         })}
