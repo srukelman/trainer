@@ -60,15 +60,15 @@ export const Calendar: CalendarComponent = ({
     }
 
     const handleWeekOfChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const newDate = new Date(event.target.value);
-        newDate.setDate(newDate.getDate() - newDate.getDay());
+        const temp = new Date(event.target.value);
+        const newDate = new Date(temp.getTime() + temp.getTimezoneOffset() * 60000);
         setState({...state, weekOf: newDate});
     }
     return (
         <div>
             <div>
                 <button onClick={decrementWeek}><FontAwesomeIcon icon={faAngleDoubleLeft} /></button>
-                <input type='date' id='current-week' defaultValue={state.currentDay.toISOString().split('T')[0]} onChange={handleWeekOfChange}/>
+                <input type='date' id='current-week' value={state.weekOf.toISOString().split('T')[0]} onChange={handleWeekOfChange}/>
                 <button onClick={incrementWeek}><FontAwesomeIcon icon={faAngleDoubleRight} /></button>
             </div>
             <table>
