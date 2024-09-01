@@ -15,4 +15,24 @@ export type Activity = {
     date: string,
 }
 
+export type Interval = {
+    id: number,
+    title: string,
+    distance: number,
+    time: number,
+    restTime: number,
+    type: string,
+}
+
+export type Workout = {
+    id: number,
+    title: string,
+    athlete: string,
+    distance: number,
+    time: number,
+    date: string,
+    type: string,
+    intervals: Interval[],
+}
+
 export type CalendarComponent = FunctionComponent<CalendarProps>;
