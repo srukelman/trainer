@@ -35,4 +35,12 @@ export type Workout = {
     intervals: Interval[],
 }
 
+export type AddWorkoutModalProps = {
+    onClose: () => void,
+    onSave: (workout: Workout) => void,
+    date: Date,
+}
+
 export type CalendarComponent = FunctionComponent<CalendarProps>;
+
+export type AddWorkoutModalComponent = FunctionComponent<AddWorkoutModalProps>;
