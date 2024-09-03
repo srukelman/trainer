@@ -162,7 +162,11 @@ export const Calendar: CalendarComponent = ({
                                 })}
                                 >
                                     Workout Planned:
-                                    {formatWorkout(workouts.filter(function(item) { return item.date.split('T')[0] == day.toISOString().split('T')[0] })[0], day)}
+                                    {formatWorkout(workouts.filter((item) => {
+                                            const date = new Date(Date.parse(item.date));
+                                            return date.getMonth() == day.getMonth() && date.getDate() == day.getDate() && date.getFullYear() == day.getFullYear();
+                                        })[0], day)
+                                    }
                                 </td>
                             );
                         })}
@@ -179,7 +183,10 @@ export const Calendar: CalendarComponent = ({
                                 })}
                                 >
                                     Workout Completed:
-                                    {formatActivity(activities.filter(function(item) { return item.date.split('T')[0] == day.toISOString().split('T')[0] })[0])}
+                                    {formatActivity(activities.filter((item)  => {
+                                            const date = new Date(Date.parse(item.date));
+                                            return date.getMonth() == day.getMonth() && date.getDate() == day.getDate() && date.getFullYear() == day.getFullYear();
+                                        })[0])}
                                 </td>
                             );
                         })}
