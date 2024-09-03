@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { AddWorkoutModalComponent } from "./types";
+import { AddWorkoutModalComponent, Workout } from "./types";
+import { on } from "events";
 
 export const AddWorkoutModal: AddWorkoutModalComponent = ({
     onClose,
@@ -7,6 +8,21 @@ export const AddWorkoutModal: AddWorkoutModalComponent = ({
     date,
 }) => {
     const [workoutType, setWorkoutType] = useState<string>("");
+    const [workout, setWorkout] = useState<Workout>({
+        id: 0,
+        title: "",
+        athlete: "",
+        distance: 0,
+        time: 0,
+        date: new Date(new Date().getTime() + new Date().getTimezoneOffset() * 60000).toISOString(),
+        type: "",
+        intervals: [],
+        fartleks: [],
+        tempo: {
+            time: 0,
+            pace: 0,
+        },
+    });
     const formSwitch = () => {
         switch (workoutType) {
             case "recovery":
@@ -75,6 +91,11 @@ export const AddWorkoutModal: AddWorkoutModalComponent = ({
         setWorkoutType(event.target.value);
     }
 
+    const handleSave = (event: React.MouseEvent<HTMLButtonElement>) => {
+        event.preventDefault();
+        onSave(workout);
+    }
+
     return (
         <div className="modal">
             <div className="modal-content">
@@ -89,7 +110,7 @@ export const AddWorkoutModal: AddWorkoutModalComponent = ({
                         <option value="fartlek">Fartlek</option>
                     </select>
                     {formSwitch()}
-                    <button type="submit">Save</button>
+                    <button onClick={handleSave}>Save</button>
                 </form>
             </div>
         </div>
