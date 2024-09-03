@@ -40,3 +40,55 @@
 .read-the-docs {
   color: #888;
 }
+
+.modal {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  position: fixed;
+  left: 25%;
+  right: 0;
+  top: 10%;
+  bottom: 0;
+  width: 50%;
+  height: 80%;
+  background-color: rgb(0, 0, 0, 1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 2em;
+}
+
+.close {
+  color: #aaa;
+  position: absolute;
+  top: 20px;
+  right: 25px;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.add-workout-form{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1em;
+}
+
+.sub-form{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1em;
+}
