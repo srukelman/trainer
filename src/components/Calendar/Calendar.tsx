@@ -4,7 +4,8 @@ import classNames from "classnames";
 import { useUnitStore } from "../../stores/SettingsStore";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDoubleLeft, faAngleDoubleRight } from "@fortawesome/free-solid-svg-icons";
-import { get } from "http";
+import { createPortal } from "react-dom";
+import { AddWorkoutModal } from "./AddWorkoutModal";
 
 export const Calendar: CalendarComponent = ({
     currentDay,
@@ -16,6 +17,8 @@ export const Calendar: CalendarComponent = ({
     const unitStore = useUnitStore();
     const [activities, setActivities] = useState<Activity[]>([])
     const [workouts, setWorkouts] = useState<Workout[]>([])
+    const [showAddWorkout, setShowAddWorkout] = useState<boolean>(false);
+    const [addWorkoutDate, setAddWorkoutDate] = useState<Date>(new Date());
     useEffect(() => {
         state.weekOf.setDate(state.weekOf.getDate() - state.weekOf.getDay());
         const getActivityData = async () => {
@@ -73,8 +76,16 @@ export const Calendar: CalendarComponent = ({
         )
     }
 
-    const formatWorkout = (workout: Workout) => {
-        if (!workout) return <p>No Workout Planned</p>
+    const formatWorkout = (workout: Workout, day: Date) => {
+        if (!workout) return (
+            <>
+                <p>No Workout Planned</p>
+                <button onClick={() => {
+                    setShowAddWorkout(true);
+                    setAddWorkoutDate(day);
+                }}>Add Workout</button>
+            </>
+        )
         let distance: number;
         let distanceUnit;
         if (useUnitStore.getState().setting == 'imperial') {
@@ -91,6 +102,7 @@ export const Calendar: CalendarComponent = ({
                 <p>{workout.title}</p>
                 <p>{distance} {distanceUnit}</p>
                 <p>{formatTime(workout.time)} seconds</p>
+                <button>Edit Workout</button>
             </div>
         )
     }
@@ -150,7 +162,7 @@ export const Calendar: CalendarComponent = ({
                                 })}
                                 >
                                     Workout Planned:
-                                    {formatWorkout(workouts.filter(function(item) { return item.date.split('T')[0] == day.toISOString().split('T')[0] })[0])}
+                                    {formatWorkout(workouts.filter(function(item) { return item.date.split('T')[0] == day.toISOString().split('T')[0] })[0], day)}
                                 </td>
                             );
                         })}
@@ -174,6 +186,10 @@ export const Calendar: CalendarComponent = ({
                     </tr>
                 </tbody>
             </table>
+            {showAddWorkout && createPortal(
+                <AddWorkoutModal onClose={() => setShowAddWorkout(false)} onSave={(workout) => {console.log(workout)}} date={addWorkoutDate} />,
+                document.getElementById('root')!
+            )}
         </div>
     )
 }
