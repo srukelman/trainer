@@ -16,12 +16,20 @@ export type Activity = {
 }
 
 export type Interval = {
-    id: number,
-    title: string,
     distance: number,
     time: number,
     restTime: number,
-    type: string,
+}
+
+export type Fartlek = {
+    distance: number,
+    time: number,
+    restTime: number,
+}
+
+export type Tempo = {
+    time: number,
+    pace: number,
 }
 
 export type Workout = {
@@ -33,6 +41,8 @@ export type Workout = {
     date: string,
     type: string,
     intervals: Interval[],
+    fartleks: Fartlek[],
+    tempo: Tempo
 }
 
 export type AddWorkoutModalProps = {
