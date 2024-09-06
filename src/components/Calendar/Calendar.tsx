@@ -46,12 +46,15 @@ export const Calendar: CalendarComponent = ({
     const formatTime = (time: number) => {
         const seconds = time % 60;
         const minutes = Math.floor(time / 60);
+        if (minutes == 0) {
+            return `${seconds.toString().padStart(2, '0')}s`;
+        }
         if (minutes < 60) {
-            return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            return `${minutes}m ${seconds.toString().padStart(2, '0')}s`;
         }
         const hours = Math.floor(minutes / 60);
         const newMinutes = minutes % 60;
-        return `${hours}:${newMinutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        return `${hours}h ${newMinutes.toString().padStart(2, '0')}m ${seconds.toString().padStart(2, '0')}s`;
     }
 
     const formatActivity = (activity: Activity) => {
@@ -71,7 +74,7 @@ export const Calendar: CalendarComponent = ({
             <div>
                 <p>{activity.title}</p>
                 <p>{distance} {distanceUnit}</p>
-                <p>{formatTime(activity.time)} seconds</p>
+                <p>{formatTime(activity.time)}</p>
             </div>
         )
     }
