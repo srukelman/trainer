@@ -16,6 +16,7 @@ export type Activity = {
 }
 
 export type Interval = {
+    reps: number,
     distance: number,
     time: number,
     restTime: number,
@@ -25,6 +26,7 @@ export type Fartlek = {
     distance: number,
     time: number,
     restTime: number,
+    reps: number,
 }
 
 export type Tempo = {
@@ -48,7 +50,7 @@ export type Workout = {
 export type AddWorkoutModalProps = {
     onClose: () => void,
     onSave: (workout: Workout) => void,
-    date: Date,
+    workout: Workout | undefined,
 }
 
 export type CalendarComponent = FunctionComponent<CalendarProps>;
