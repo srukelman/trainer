@@ -18,7 +18,7 @@ export const Calendar: CalendarComponent = ({
     const [activities, setActivities] = useState<Activity[]>([])
     const [workouts, setWorkouts] = useState<Workout[]>([])
     const [showAddWorkout, setShowAddWorkout] = useState<boolean>(false);
-    const [addWorkoutDate, setAddWorkoutDate] = useState<Date>(new Date());
+    const [addWorkout, setAddWorkout] = useState<Workout>();
     useEffect(() => {
         state.weekOf.setDate(state.weekOf.getDate() - state.weekOf.getDay());
         const getActivityData = async () => {
@@ -85,7 +85,7 @@ export const Calendar: CalendarComponent = ({
                 <p>No Workout Planned</p>
                 <button onClick={() => {
                     setShowAddWorkout(true);
-                    setAddWorkoutDate(day);
+                    setAddWorkout(workout);
                 }}>Add Workout</button>
             </>
         )
@@ -197,7 +197,7 @@ export const Calendar: CalendarComponent = ({
                 </tbody>
             </table>
             {showAddWorkout && createPortal(
-                <AddWorkoutModal onClose={() => setShowAddWorkout(false)} onSave={(workout) => {console.log(workout)}} date={addWorkoutDate} />,
+                <AddWorkoutModal onClose={() => setShowAddWorkout(false)} onSave={(workout) => {console.log(workout)}} workout={addWorkout} />,
                 document.getElementById('root')!
             )}
         </div>
