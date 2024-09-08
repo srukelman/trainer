@@ -203,15 +203,6 @@ export const AddWorkoutModal: AddWorkoutModalComponent = ({
                         </div>
                     </div>
                 );
-            default:
-                return (
-                    <div>
-                        <label htmlFor="totalDistance">Total Distance</label>
-                        <input type="number" id="totalDistance" name="distance" value={resultWorkout.distance} onChange={handleChange} />
-                        <label htmlFor="totalTime">Total Time</label>
-                        <input type="number" id="totalTime" name="time" value={resultWorkout.time} onChange={handleChange}/>
-                    </div>
-                );
         }
     }
 
