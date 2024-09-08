@@ -84,7 +84,7 @@ export const AddWorkoutModal: AddWorkoutModalComponent = ({
 
     const handleAddFartlek = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
-        if (newFartlek.reps === 0 || newFartlek.time === 0 || newFartlek.restTime === 0) {
+        if (newFartlek.reps == 0 || newFartlek.time == 0 || newFartlek.restTime == 0) {
             setError(true);
             setErrorMessage("All fields are required");
             return;
@@ -207,14 +207,15 @@ export const AddWorkoutModal: AddWorkoutModalComponent = ({
     }
 
     const handleTypeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        if (event.target.value === "interval") {
-            setWorkout({...resultWorkout, intervals: []});
-        } else if (event.target.value === "fartlek") {
-            setWorkout({...resultWorkout, fartleks: []});
-        } else if (event.target.value === "tempo") {
-            setWorkout({...resultWorkout, tempo: {time: 0, pace: 0}});
+        let newWorkout: Workout = resultWorkout;
+        if (event.target.value == "interval") {
+            newWorkout = {...resultWorkout, intervals: []};
+        } else if (event.target.value == "fartlek") {
+            newWorkout = {...resultWorkout, fartleks: []};
+        } else if (event.target.value == "tempo") {
+            newWorkout = {...resultWorkout, tempo: {time: 0, pace: 0}};
         }
-        setWorkout({...resultWorkout, type: event.target.value as WorkoutType});
+        setWorkout({...newWorkout, type: event.target.value as WorkoutType});
     }
 
     const handleSave = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -228,7 +229,7 @@ export const AddWorkoutModal: AddWorkoutModalComponent = ({
                 <span className="close" onClick={onClose}>&times;</span>
                 <h2>Add Workout</h2>
                 <form className="add-workout-form">
-                    <select id="type" name="type" onChange={handleTypeChange} required>
+                    <select id="type" name="type" onChange={handleTypeChange}>
                         <option value="recovery">Recovery</option>
                         <option value="long run">Long Run</option>
                         <option value="interval">Intervals</option>
