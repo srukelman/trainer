@@ -19,6 +19,8 @@ export const Calendar: CalendarComponent = ({
     const [workouts, setWorkouts] = useState<Workout[]>([])
     const [showAddWorkout, setShowAddWorkout] = useState<boolean>(false);
     const [addWorkout, setAddWorkout] = useState<Workout>();
+    const [addWorkoutDay, setAddWorkoutDay] = useState<Date>(new Date());
+    const [key, setKey] = useState<number>(0);
     useEffect(() => {
         state.weekOf.setDate(state.weekOf.getDate() - state.weekOf.getDay());
         const getActivityData = async () => {
@@ -41,7 +43,7 @@ export const Calendar: CalendarComponent = ({
         }
         getActivityData();
         getWorkoutData();
-    }, [unitStore, state]);
+    }, [unitStore, state, key]);
 
     const formatTime = (time: number) => {
         const seconds = time % 60;
@@ -86,6 +88,7 @@ export const Calendar: CalendarComponent = ({
                 <button onClick={() => {
                     setShowAddWorkout(true);
                     setAddWorkout(workout);
+                    setAddWorkoutDay(new Date(day.getTime() + day.getTimezoneOffset() * 60000));
                 }}>Add Workout</button>
             </>
         )
@@ -104,7 +107,7 @@ export const Calendar: CalendarComponent = ({
             <div>
                 <p>{workout.title}</p>
                 <p>{distance} {distanceUnit}</p>
-                <p>{formatTime(workout.time)} seconds</p>
+                <p>{formatTime(workout.time)}</p>
                 <button>Edit Workout</button>
             </div>
         )
@@ -125,6 +128,18 @@ export const Calendar: CalendarComponent = ({
         const temp = new Date(event.target.value);
         const newDate = new Date(temp.getTime() + temp.getTimezoneOffset() * 60000);
         setState({...state, weekOf: newDate});
+    }
+
+    const sendWorkout = async (workout: Workout) => {
+        const uri = `${import.meta.env.VITE_BACKEND_URL}/workouts`;
+        const requestHeaders: Headers = new Headers({
+            "Content-Type": 'application/json'
+        });
+        workout = {...workout, date: addWorkoutDay.toISOString(), title: "New Workout", athlete: atheleteId };
+        const body = JSON.stringify(workout);
+        const response = await fetch(uri, { method: 'POST', headers: requestHeaders, body });
+        await response.json();
+        setKey(key + 1);
     }
     return (
         <div>
@@ -197,7 +212,13 @@ export const Calendar: CalendarComponent = ({
                 </tbody>
             </table>
             {showAddWorkout && createPortal(
-                <AddWorkoutModal onClose={() => setShowAddWorkout(false)} onSave={(workout) => {console.log(workout)}} workout={addWorkout} />,
+                <AddWorkoutModal
+                    onClose={() => setShowAddWorkout(false)}
+                    onSave={(workout) => {
+                        sendWorkout(workout)
+                        setShowAddWorkout(false);
+                    }}
+                    workout={addWorkout} />,
                 document.getElementById('root')!
             )}
         </div>

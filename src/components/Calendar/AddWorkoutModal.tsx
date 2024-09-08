@@ -42,7 +42,7 @@ export const AddWorkoutModal: AddWorkoutModalComponent = ({
         const { name, value } = event.target;
         setWorkout({
             ...resultWorkout,
-            [name]: value,
+            [name]: parseInt(value),
         });
     }
 
