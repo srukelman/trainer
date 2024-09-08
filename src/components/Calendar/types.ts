@@ -23,7 +23,6 @@ export type Interval = {
 }
 
 export type Fartlek = {
-    distance: number,
     time: number,
     restTime: number,
     reps: number,
