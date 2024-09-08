@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { AddWorkoutModalComponent, Workout, Interval, WorkoutType, Fartlek } from "./types";
+import { AddWorkoutModalComponent, Workout, Interval, WorkoutType, Fartlek, Tempo } from "./types";
 
 export const AddWorkoutModal: AddWorkoutModalComponent = ({
     onClose,
@@ -16,10 +16,7 @@ export const AddWorkoutModal: AddWorkoutModalComponent = ({
         date: "",
         intervals: [],
         fartleks: [],
-        tempo: {
-            time: 0,
-            pace: 0,
-        }
+        tempo: [],
     });
 
     const [newInterval, setNewInterval] = useState<Interval>({
@@ -165,6 +162,7 @@ export const AddWorkoutModal: AddWorkoutModalComponent = ({
                         <input type="number" id="totalDistance" name="distance" value={resultWorkout.distance} onChange={handleChange} />
                         <label htmlFor="totalTime">Total Time</label>
                         <input type="number" id="totalTime" name="time" value={resultWorkout.time} onChange={handleChange}/>
+                        
                     </div>
                 );
             case "fartlek":
@@ -213,7 +211,7 @@ export const AddWorkoutModal: AddWorkoutModalComponent = ({
         } else if (event.target.value == "fartlek") {
             newWorkout = {...resultWorkout, fartleks: []};
         } else if (event.target.value == "tempo") {
-            newWorkout = {...resultWorkout, tempo: {time: 0, pace: 0}};
+            newWorkout = {...resultWorkout, tempo: []};
         }
         setWorkout({...newWorkout, type: event.target.value as WorkoutType});
     }

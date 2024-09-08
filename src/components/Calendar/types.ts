@@ -45,7 +45,7 @@ export type Workout = {
     date: string,
     intervals: Interval[],
     fartleks: Fartlek[],
-    tempo: Tempo
+    tempo: Tempo[],
 }
 
 export type AddWorkoutModalProps = {
