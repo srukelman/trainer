@@ -1,20 +1,19 @@
 import { useEffect, useState } from "react";
-import { AddWorkoutModalComponent, Workout } from "./types";
+import { AddWorkoutModalComponent, Workout, Interval, WorkoutType } from "./types";
 
 export const AddWorkoutModal: AddWorkoutModalComponent = ({
     onClose,
     onSave,
     workout,
 }) => {
-    const [workoutType, setWorkoutType] = useState<string>("");
     const [resultWorkout, setWorkout] = useState<Workout>(workout || {
         id: 0,
+        type: "recovery",
         title: "",
         athlete: "",
         distance: 0,
         time: 0,
         date: "",
-        type: "",
         intervals: [],
         fartleks: [],
         tempo: {
@@ -23,24 +22,55 @@ export const AddWorkoutModal: AddWorkoutModalComponent = ({
         }
     });
 
+    const [newInterval, setNewInterval] = useState<Interval>({
+        reps: 0,
+        distance: 0,
+        time: 0,
+        restTime: 0,
+    });
+    const [error, setError] = useState<boolean>(false);
+    const [errorMessage, setErrorMessage] = useState<string>("");
+
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>)  =>{
+        const { name, value } = event.target;
+        setWorkout({
+            ...resultWorkout,
+            [name]: value,
+        });
+    }
+
+    const handleIntervalInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = event.target;
+        setNewInterval({
+            ...newInterval,
+            [name]: parseInt(value),
+        });
+    };
+
     useEffect(() => {
         console.log(resultWorkout.intervals);
     }, [resultWorkout]);
 
     const handleAddSet = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
-        const interval = {
-            reps: parseInt((document.getElementById("reps") as HTMLInputElement).value),
-            distance: parseInt((document.getElementById("distance") as HTMLInputElement).value),
-            time: parseInt((document.getElementById("time") as HTMLInputElement).value),
-            restTime: parseInt((document.getElementById("rest-time") as HTMLInputElement).value),
+        if (newInterval.reps === 0 || newInterval.distance === 0 || newInterval.time === 0 || newInterval.restTime === 0) {
+            setError(true);
+            setErrorMessage("All fields are required");
+            return;
         }
-        resultWorkout.intervals.push(interval);
-        setWorkout(resultWorkout);
+        const newIntervals = [...resultWorkout.intervals, newInterval];
+        setWorkout({...resultWorkout, intervals: newIntervals});
+        setNewInterval({
+            reps: 0,
+            distance: 0,
+            time: 0,
+            restTime: 0,
+        });
+
     }
 
     const formSwitch = () => {
-        switch (workoutType) {
+        switch (resultWorkout.type) {
             case "recovery":
                 return (
                     <div className="sub-form">
@@ -50,7 +80,7 @@ export const AddWorkoutModal: AddWorkoutModalComponent = ({
                         <input type="number" id="time" name="time" required />
                     </div>
                 );
-            case "long":
+            case "long run":
                 return (
                     <div className="sub-form">
                         <label htmlFor="distance">Distance</label>
@@ -63,27 +93,42 @@ export const AddWorkoutModal: AddWorkoutModalComponent = ({
                 return (
                     <div className="sub-form">
                         <div className="interval-sub-form">
-                            <label htmlFor="distance">Distance</label>
-                            <input type="number" id="distance" name="distance" required />
-                            <label htmlFor="time">Time</label>
-                            <input type="number" id="time" name="time" required />
-                            <label htmlFor="reps">Intervals</label>
-                            {resultWorkout.intervals.map((interval, index) => {
-                                return (
-                                    <div key={index}>
-                                        <label>Set {index + 1}</label>
-                                        <p id="reps">{interval.reps}</p>
-                                        <p id="distance">{interval.distance}</p>
-                                        <p id="time">{interval.time}</p>
-                                        <p id="rest-time">{interval.restTime}</p>
-                                    </div>
-                                );
-                            })}
-                            <input type="number" id="reps" name="reps" required />
-                            <input type="number" id="distance" name="distance" required />
-                            <input type="number" id="time" name="time" required />
-                            <input type="number" id="rest-time" name="rest-time" required />
-                            <button onClick={handleAddSet}>Add Set</button>
+                            <label htmlFor="totalDistance">Total Distance</label>
+                            <input type="number" id="totalDistance" name="distance" value={resultWorkout.distance} onChange={handleChange} />
+                            <label htmlFor="totalTime">Total Time</label>
+                            <input type="number" id="totalTime" name="time" value={resultWorkout.time} onChange={handleChange}/>
+                            <table>
+                                {resultWorkout.intervals.length > 0 &&
+                                    <tr>
+                                        <th>Set</th>
+                                        <th>Reps</th>
+                                        <th>Distance</th>
+                                        <th>Time</th>
+                                        <th>Rest Time</th>
+                                    </tr>
+                                }
+                                {resultWorkout.intervals.map((interval, index) => {
+                                    return (
+                                        <tr key={index}>
+                                            <td>Set {index + 1}</td>
+                                            <td>{interval.reps}</td>
+                                            <td id="distance">{interval.distance}</td>
+                                            <td id="time">{interval.time}</td>
+                                            <td id="rest-time">{interval.restTime}</td>
+                                        </tr>
+                                    );
+                                })}
+                            </table>
+                            <div className="interval-add-form">
+                                <input type="number" id="reps" name="reps" value={newInterval.reps} onChange={handleIntervalInputChange}/>
+                                <input type="number" id="distance" name="distance" value={newInterval.distance} onChange={handleIntervalInputChange} />
+                                <input type="number" id="time" name="time" value={newInterval.time} onChange={handleIntervalInputChange} />
+                                <input type="number" id="restTime" name="restTime" value={newInterval.restTime} onChange={handleIntervalInputChange} />
+                                {error && <p className="error-text">{errorMessage}</p>}
+                                <button onClick={handleAddSet}>Add Set</button>
+
+                            </div>
+                            
 
                         </div>
                     </div>
@@ -119,7 +164,7 @@ export const AddWorkoutModal: AddWorkoutModalComponent = ({
     }
 
     const handleTypeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        setWorkoutType(event.target.value);
+        setWorkout({...resultWorkout, type: event.target.value as WorkoutType});
     }
 
     const handleSave = (event: React.MouseEvent<HTMLButtonElement>) => {

@@ -34,14 +34,16 @@ export type Tempo = {
     pace: number,
 }
 
+export type WorkoutType = "interval" | "fartlek" | "tempo" | "recovery" | "long run";
+
 export type Workout = {
     id: number,
+    type: WorkoutType,
     title: string,
     athlete: string,
     distance: number,
     time: number,
     date: string,
-    type: string,
     intervals: Interval[],
     fartleks: Fartlek[],
     tempo: Tempo
