@@ -73,91 +73,87 @@ export const AddWorkoutModal: AddWorkoutModalComponent = ({
         switch (resultWorkout.type) {
             case "recovery":
                 return (
-                    <div className="sub-form">
+                    <div className="subForm">
                         <label htmlFor="distance">Distance</label>
-                        <input type="number" id="distance" name="distance" required />
+                        <input type="number" id="distance" name="distance" value={resultWorkout.distance} onChange={handleChange} />
                         <label htmlFor="time">Time</label>
-                        <input type="number" id="time" name="time" required />
+                        <input type="number" id="time" name="time" value={resultWorkout.time} onChange={handleChange}/>
                     </div>
                 );
             case "long run":
                 return (
-                    <div className="sub-form">
+                    <div className="subForm">
                         <label htmlFor="distance">Distance</label>
-                        <input type="number" id="distance" name="distance" required />
+                        <input type="number" id="distance" name="distance" value={resultWorkout.distance} onChange={handleChange} />
                         <label htmlFor="time">Time</label>
-                        <input type="number" id="time" name="time" required />
+                        <input type="number" id="time" name="time" value={resultWorkout.time} onChange={handleChange}/>
                     </div>
                 );
             case "interval":
                 return (
-                    <div className="sub-form">
-                        <div className="interval-sub-form">
-                            <label htmlFor="totalDistance">Total Distance</label>
-                            <input type="number" id="totalDistance" name="distance" value={resultWorkout.distance} onChange={handleChange} />
-                            <label htmlFor="totalTime">Total Time</label>
-                            <input type="number" id="totalTime" name="time" value={resultWorkout.time} onChange={handleChange}/>
-                            <table>
-                                {resultWorkout.intervals.length > 0 &&
-                                    <tr>
-                                        <th>Set</th>
-                                        <th>Reps</th>
-                                        <th>Distance</th>
-                                        <th>Time</th>
-                                        <th>Rest Time</th>
+                    <div className="subForm">
+                        <label htmlFor="totalDistance">Total Distance</label>
+                        <input type="number" id="totalDistance" name="distance" value={resultWorkout.distance} onChange={handleChange} />
+                        <label htmlFor="totalTime">Total Time</label>
+                        <input type="number" id="totalTime" name="time" value={resultWorkout.time} onChange={handleChange}/>
+                        <table>
+                            {resultWorkout.intervals.length > 0 &&
+                                <tr>
+                                    <th>Set</th>
+                                    <th>Reps</th>
+                                    <th>Distance</th>
+                                    <th>Time</th>
+                                    <th>Rest Time</th>
+                                </tr>
+                            }
+                            {resultWorkout.intervals.map((interval, index) => {
+                                return (
+                                    <tr key={index}>
+                                        <td>Set {index + 1}</td>
+                                        <td>{interval.reps}</td>
+                                        <td id="distance">{interval.distance}</td>
+                                        <td id="time">{interval.time}</td>
+                                        <td id="rest-time">{interval.restTime}</td>
                                     </tr>
-                                }
-                                {resultWorkout.intervals.map((interval, index) => {
-                                    return (
-                                        <tr key={index}>
-                                            <td>Set {index + 1}</td>
-                                            <td>{interval.reps}</td>
-                                            <td id="distance">{interval.distance}</td>
-                                            <td id="time">{interval.time}</td>
-                                            <td id="rest-time">{interval.restTime}</td>
-                                        </tr>
-                                    );
-                                })}
-                            </table>
-                            <div className="interval-add-form">
-                                <input type="number" id="reps" name="reps" value={newInterval.reps} onChange={handleIntervalInputChange}/>
-                                <input type="number" id="distance" name="distance" value={newInterval.distance} onChange={handleIntervalInputChange} />
-                                <input type="number" id="time" name="time" value={newInterval.time} onChange={handleIntervalInputChange} />
-                                <input type="number" id="restTime" name="restTime" value={newInterval.restTime} onChange={handleIntervalInputChange} />
-                                {error && <p className="error-text">{errorMessage}</p>}
-                                <button onClick={handleAddSet}>Add Set</button>
-
-                            </div>
-                            
+                                );
+                            })}
+                        </table>
+                        <div className="interval-add-form">
+                            <input type="number" id="reps" name="reps" value={newInterval.reps} onChange={handleIntervalInputChange}/>
+                            <input type="number" id="distance" name="distance" value={newInterval.distance} onChange={handleIntervalInputChange} />
+                            <input type="number" id="time" name="time" value={newInterval.time} onChange={handleIntervalInputChange} />
+                            <input type="number" id="restTime" name="restTime" value={newInterval.restTime} onChange={handleIntervalInputChange} />
+                            {error && <p className="error-text">{errorMessage}</p>}
+                            <button onClick={handleAddSet}>Add Set</button>
 
                         </div>
                     </div>
                 );
             case "tempo":
                 return (
-                    <div className="sub-form">
-                        <label htmlFor="distance">Distance</label>
-                        <input type="number" id="distance" name="distance" required />
-                        <label htmlFor="time">Time</label>
-                        <input type="number" id="time" name="time" required />
+                    <div className="subForm">
+                        <label htmlFor="totalDistance">Total Distance</label>
+                        <input type="number" id="totalDistance" name="distance" value={resultWorkout.distance} onChange={handleChange} />
+                        <label htmlFor="totalTime">Total Time</label>
+                        <input type="number" id="totalTime" name="time" value={resultWorkout.time} onChange={handleChange}/>
                     </div>
                 );
             case "fartlek":
                 return (
-                    <div className="sub-form">
-                        <label htmlFor="distance">Distance</label>
-                        <input type="number" id="distance" name="distance" required />
-                        <label htmlFor="time">Time</label>
-                        <input type="number" id="time" name="time" required />
+                    <div className="subForm">
+                        <label htmlFor="totalDistance">Total Distance</label>
+                        <input type="number" id="totalDistance" name="distance" value={resultWorkout.distance} onChange={handleChange} />
+                        <label htmlFor="totalTime">Total Time</label>
+                        <input type="number" id="totalTime" name="time" value={resultWorkout.time} onChange={handleChange}/>
                     </div>
                 );
             default:
                 return (
                     <div>
-                        <label htmlFor="distance">Distance</label>
-                        <input type="number" id="distance" name="distance" required />
-                        <label htmlFor="time">Time</label>
-                        <input type="number" id="time" name="time" required />
+                        <label htmlFor="totalDistance">Total Distance</label>
+                        <input type="number" id="totalDistance" name="distance" value={resultWorkout.distance} onChange={handleChange} />
+                        <label htmlFor="totalTime">Total Time</label>
+                        <input type="number" id="totalTime" name="time" value={resultWorkout.time} onChange={handleChange}/>
                     </div>
                 );
         }
@@ -180,7 +176,7 @@ export const AddWorkoutModal: AddWorkoutModalComponent = ({
                 <form className="add-workout-form">
                     <select id="type" name="type" onChange={handleTypeChange} required>
                         <option value="recovery">Recovery</option>
-                        <option value="long">Long Run</option>
+                        <option value="long run">Long Run</option>
                         <option value="interval">Intervals</option>
                         <option value="tempo">Tempo</option>
                         <option value="fartlek">Fartlek</option>
