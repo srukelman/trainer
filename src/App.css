@@ -114,3 +114,7 @@
 .interval-add-form button{
   flex: 4 1;
 }
+
+.error-text{
+  color: red;
+}

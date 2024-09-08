@@ -30,6 +30,11 @@ export const AddWorkoutModal: AddWorkoutModalComponent = ({
         time: 0,
         restTime: 0,
     });
+    const [newTempo, setNewTempo] = useState<Tempo>({
+        time: 0,
+        pace: 0,
+        reps: 0,
+    });
     const [error, setError] = useState<boolean>(false);
     const [errorMessage, setErrorMessage] = useState<string>("");
 
@@ -57,6 +62,14 @@ export const AddWorkoutModal: AddWorkoutModalComponent = ({
         });
     }
 
+    const handleTempoInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = event.target;
+        setNewTempo({
+            ...newTempo,
+            [name]: parseInt(value),
+        });
+    }
+
     useEffect(() => {
         console.log(resultWorkout.intervals);
     }, [resultWorkout]);
@@ -68,6 +81,7 @@ export const AddWorkoutModal: AddWorkoutModalComponent = ({
             setErrorMessage("All fields are required");
             return;
         }
+        setError(false);
         const newIntervals = [...resultWorkout.intervals, newInterval];
         setWorkout({...resultWorkout, intervals: newIntervals});
         setNewInterval({
@@ -92,6 +106,22 @@ export const AddWorkoutModal: AddWorkoutModalComponent = ({
             reps: 0,
             time: 0,
             restTime: 0,
+        });
+    }
+
+    const handleAddTempo = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        if (newTempo.reps == 0 || newTempo.time == 0 || newTempo.pace == 0) {
+            setError(true);
+            setErrorMessage("All fields are required");
+            return;
+        }
+        const newTempos = [...resultWorkout.tempo, newTempo];
+        setWorkout({...resultWorkout, tempo: newTempos});
+        setNewTempo({
+            reps: 0,
+            time: 0,
+            pace: 0,
         });
     }
 
@@ -162,7 +192,33 @@ export const AddWorkoutModal: AddWorkoutModalComponent = ({
                         <input type="number" id="totalDistance" name="distance" value={resultWorkout.distance} onChange={handleChange} />
                         <label htmlFor="totalTime">Total Time</label>
                         <input type="number" id="totalTime" name="time" value={resultWorkout.time} onChange={handleChange}/>
-                        
+                        <table>
+                            {resultWorkout.tempo.length > 0 &&
+                                <tr>
+                                    <th>Set</th>
+                                    <th>Reps</th>
+                                    <th>Time</th>
+                                    <th>Pace</th>
+                                </tr>
+                            }
+                            {resultWorkout.tempo.map((tempo, index) => {
+                                return (
+                                    <tr key={index}>
+                                        <td>Set {index + 1}</td>
+                                        <td id="reps">{tempo.reps}</td>
+                                        <td id="time">{tempo.time}</td>
+                                        <td id="pace">{tempo.pace}</td>
+                                    </tr>
+                                );
+                            })}
+                        </table>
+                        <div className="interval-add-form">
+                            <input type="number" id="reps" name="reps" value={newTempo.reps} onChange={handleTempoInputChange}/>
+                            <input type="number" id="time" name="time" value={newTempo.time} onChange={handleTempoInputChange}/>
+                            <input type="number" id="pace" name="pace" value={newTempo.pace} onChange={handleTempoInputChange} />
+                            {error && <p className="error-text">{errorMessage}</p>}
+                            <button onClick={handleAddTempo}>Add Set</button>
+                        </div>
                     </div>
                 );
             case "fartlek":
@@ -208,10 +264,26 @@ export const AddWorkoutModal: AddWorkoutModalComponent = ({
         let newWorkout: Workout = resultWorkout;
         if (event.target.value == "interval") {
             newWorkout = {...resultWorkout, intervals: []};
+            setNewInterval({
+                reps: 0,
+                distance: 0,
+                time: 0,
+                restTime: 0,
+            });
         } else if (event.target.value == "fartlek") {
             newWorkout = {...resultWorkout, fartleks: []};
+            setNewFartlek({
+                reps: 0,
+                time: 0,
+                restTime: 0,
+            });
         } else if (event.target.value == "tempo") {
             newWorkout = {...resultWorkout, tempo: []};
+            setNewTempo({
+                reps: 0,
+                time: 0,
+                pace: 0,
+            });
         }
         setWorkout({...newWorkout, type: event.target.value as WorkoutType});
     }

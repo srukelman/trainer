@@ -31,6 +31,7 @@ export type Fartlek = {
 export type Tempo = {
     time: number,
     pace: number,
+    reps: number,
 }
 
 export type WorkoutType = "interval" | "fartlek" | "tempo" | "recovery" | "long run";
